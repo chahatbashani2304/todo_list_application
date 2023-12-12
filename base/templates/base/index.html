@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div>
+Index page h ye
+{% if not anonymous %}
+Your todos are: <br> <br><br><br>
+
+{% for todo in todos %}
+<div>
+	{{ todo.title }} <br>
+	desc == {{ todo.desc }} <br>
+	completed == {{ todo.completed }} <br>
+	added == {{ todo.added }}
+	<form method="POST">
+		{% csrf_token %}
+		{# this title_addeddate is being done to uniquely identify which todo is being clicked so that the controller can delete it properly #}
+		<input type="hidden" value="{{ todo.todoid }}" name="tobedeleted">
+		<button type="submit">Delete</button>
+	</form>
+	<form method="POST">
+		{% csrf_token %}
+		<input type="hidden" value="{{ todo.todoid }}" name="tobeupdated">
+		<input type="checkbox" value="{{todo.completed}}" onChange="this.form.submit()" name="checkbox" {% if todo.completed is not None %} checked {% endif %}>
+	</form>
+</div>
+<br><br>
+{% endfor %}
+<br><br><br><br>
+<div>
+	<form method="POST">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type='submit' >
+	</form>
+</div>
+
+{% else %}
+<br><br>
+<div>Signup to add a todo</div>
+<br>
+
+{% endif %}
+
+{% if anonymous %}
+<br>
+<a href="/login">Login</a> <br>
+<a href="/signup">Signup</a><br>
+{% else %}
+<a href="/logout">Logout</a><br>
+{% endif %}
+
+
+</div>
+{% endblock body %}
